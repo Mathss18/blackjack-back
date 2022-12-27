@@ -1,8 +1,9 @@
 FROM node:19
-WORKDIR /app
-COPY package.json ./
-COPY package-lock.json ./
+WORKDIR /node_app/app
+COPY ./package.json .
 RUN npm install
 COPY . .
-
-CMD ["npm", "run", "dev"]
+RUN npm run build
+RUN npm install pm2 -g
+EXPOSE 3000
+CMD ["pm2-runtime","./dist/index.js"]

@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  node:
+  nodejs:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -27,4 +27,15 @@ services:
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - node
+      - nodejs
+
+  rabbitmq:
+    image: rabbitmq:3.11.5-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672" # admin-panel port
+    volumes:
+      - ./docker/rabbitmq:/var/lib/rabbitmq
+    env_file:
+      - .env

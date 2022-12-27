@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    # ports:
+    #   - "3000:3000"
+    volumes:
+      - .:/node_app/app
+    command: /bin/sh -c "chmod +x entrypoint.sh && chmod +x healthcheck.sh && /node_app/app/entrypoint.sh"
+    env_file:
+      - .env
+    restart: always
+    healthcheck:
+      test: ./healthcheck.sh
+      interval: 30s
+      timeout: 5s
+      retries: 1
+      start_period: 10s
+
+  nginx:
+    image: nginx:1.23.3
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - nodejs
+
+  rabbitmq:
+    image: rabbitmq:3.11.5-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672" # control-panel port
+    volumes:
+      - ./docker/rabbitmq:/var/lib/rabbitmq
+    env_file:
+      - .env
+    depends_on:
+      - nginx
+      - nodejs

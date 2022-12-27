@@ -1,3 +1,4 @@
 node_modules
 dist
-load-tests
+docker/rabbitmq/*
+docker/mysql/*

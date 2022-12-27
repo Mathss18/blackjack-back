@@ -1,6 +1,4 @@
 #!/bin/bash
-echo 'EXECUTANDO HEALTHCHECK';
-
 randomInterval=$(( ( RANDOM % 10 )  + 1 ))
 sleep "$randomInterval";
 
