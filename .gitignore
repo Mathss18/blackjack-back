@@ -2,3 +2,4 @@ node_modules
 dist
 docker/rabbitmq/*
 docker/mysql/*
+.env
